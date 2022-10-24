@@ -1,6 +1,6 @@
 // this is authentication process to decide if user have a valid token or not
 const jwt = require("jsonwebtoken");
-const User = require("../Modules/user");
+const User = require('../Models/User')
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -9,7 +9,7 @@ async function auth(req, res, next) {
   const rawToken = req.headers.authorization;
   // console.log(req.headers);
   // console.log(req.body);
-  console.log("rowToken \n ", rawToken);
+  // console.log("rowToken \n ", rawToken);
   try {
     if (
       rawToken === "Bearer" ||
@@ -18,15 +18,15 @@ async function auth(req, res, next) {
       JSON.stringify(rawToken) === "{}"
     )
       {
-        console.log("error token");
+        // console.log("error token");
         throw new Error("Anoymouns user");
       }
     const token = rawToken.split(" ")[1].trim();
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded token \n",decodedToken);
-    console.log(decodedToken.email);
+    // console.log("decoded token \n",decodedToken);
+    // console.log(decodedToken.email);
     const user = await User.findByEmail(decodedToken.email);
-    console.log(user);
+    // console.log(user);
     if (!user) throw new Error("Anoymouns user");
     // console.log("decoded token", decodedToken)
     req.currentUser = decodedToken;
