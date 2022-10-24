@@ -76,4 +76,15 @@ class Habit {
             }
         });
     }
+
+    destroy(){
+        return new Promise( async (res, rej) => {
+            try {
+                const result = await db.query('DELETE FROM books WHERE id = $1 RETURNING user_id', [ this.id ]);
+                res('Book was deleted')
+            } catch (err) {
+                rej('Book could not be deleted')
+            }
+        })
+    };
 }
