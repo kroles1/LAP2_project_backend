@@ -27,7 +27,7 @@ class User {
     static getById (id) {
         return new Promise (async (res, rej) => {
             try {
-                const db = await init() // depends what taher called this function
+                // const db = await init() // depends what taher called this function
                 const userData = await db.query(`SELECT * FROM users WHERE id = $1;`, [id])
                 let user = new User(userData.rows[0])
                 res(user)
@@ -40,9 +40,10 @@ class User {
     static create (userData) {
         return new Promise (async (res, rej) => {
             try {       
-                const db = await init() // depends what taher called this function
-                const {username, email, password, level, exp} = userData
-                const user = await db.query("INSERT INTO users (username, email, password, level, exp) VALUES ($1, $2, $3, $4, $5);", [username, email, password, level, exp])
+                // const db = await init() // depends what taher called this function
+                // to register we need username, password, email and the rest of data will be setup as default values
+                const {username, email, password} = userData
+                const user = await db.query("INSERT INTO users (user_name, email, user_password) VALUES ($1, $2, $3);", [username, email, password])
                 res(user)
             } catch (err) {
                 rej(err.message)
