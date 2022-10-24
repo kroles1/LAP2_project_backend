@@ -1,4 +1,4 @@
-const { init } = require('./initdb')
+const { init } = require('../dbConfig/init')
 
 class Habit {
     constructor(data) {
@@ -60,7 +60,7 @@ class Habit {
                 let updatedHabit = new Habit(updatedHabitData.rows[0]);
                 resolve (updatedHabit);
             } catch (err) {
-                reject('Error updating user');
+                reject('Error editing habit');
             }
         });
     }
@@ -68,11 +68,11 @@ class Habit {
     update () {
         return new Promise (async (resolve, reject) => {
             try {
-                let updatedHabitData = await db.query(`UPDATE users SET  WHERE id = $1  RETURNING *;`, [this.id ]);
+                let updatedHabitData = await db.query(`UPDATE users SET level = level + 1 WHERE id = $1  RETURNING *;`, [this.id ]);
                 let updatedHabit = new Habit(updatedHabitData.rows[0]);
                 resolve (updatedHabit);
             } catch (err) {
-                reject('Error updating user');
+                reject('Error updating habit');
             }
         });
     }
