@@ -47,7 +47,7 @@
 
 
 
-
+DROP TABLE IF EXISTS public.users;
 CREATE TABLE users (
     id serial PRIMARY KEY,
     user_name varchar(100) NOT NULL UNIQUE,
@@ -58,16 +58,17 @@ CREATE TABLE users (
 	);
 
 
-
+DROP TABLE IF EXISTS public.habits;
 CREATE TABLE habits (
     id serial PRIMARY KEY,
     name varchar(100) NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
     difficulty varchar DEFAULT 'esay',
     frequency varchar DEFAULT 'd',
     number_of_rep INT,
     completed BOOLEAN DEFAULT FALSE,
     last_completed DATE ,
-    streak INT DEFAULT 0
+    streak INT DEFAULT 0,
+    user_id INT NOT NULL
 );
+
 

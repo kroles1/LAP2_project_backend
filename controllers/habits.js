@@ -1,4 +1,4 @@
-const Habit = require('../models/Habit')
+// const Habit = require('../models/Habit')
 
 async function index (req, res) {
     try {
