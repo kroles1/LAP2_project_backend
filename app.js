@@ -7,6 +7,7 @@ app.use(express.json())
 
 const userRoutes = require('./routes/users')
 const habitRoutes = require('./routes/habits')
+const authRoutes = require('./routes/auth')
 
 app.get('/', (req, res) => res.send('Hi everyone! its trackIT'))
 app.use('/users', userRoutes)
