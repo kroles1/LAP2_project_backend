@@ -20,15 +20,6 @@ async function getById (req, res) {
     }
 }
 
-// not need as auth.register route will do it.
-// async function create (req, res) {
-//     try {
-//         const user = await User.create(req.body)
-//         res.status(201).json(user)
-//     } catch (err) {
-//         res.status(422).json({err})
-//     }
-// }
 
 async function edit (req, res) {
     try {

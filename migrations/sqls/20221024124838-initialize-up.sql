@@ -64,9 +64,9 @@ CREATE TABLE habits (
     name varchar(100) NOT NULL,
     difficulty varchar DEFAULT 'esay',
     frequency varchar DEFAULT 'd',
-    number_of_rep INT,
+    number_of_rep INT DEFAULT 1,
     completed BOOLEAN DEFAULT FALSE,
-    last_completed DATE ,
+    last_completed DATE DEFAULT NULL ,
     streak INT DEFAULT 0,
     user_id INT NOT NULL
 );
