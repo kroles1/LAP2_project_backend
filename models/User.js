@@ -1,4 +1,4 @@
-const { init } = require('../dbConfig/init')
+const db = require('../dbConfig/init.js')
 
 class User {
     constructor(data) {
@@ -13,7 +13,7 @@ class User {
     static get all () {
         return new Promise (async (res, rej) => {
             try {
-                const db = await init() // depends what taher called this function
+                // const db = await init() // depends what taher called this function
                 const userData = await db.query('SELECT * FROM users;')
                 const users = userData.rows.map( u => new User(u))
                 if(!users.length) throw new Error ('No Users to get')

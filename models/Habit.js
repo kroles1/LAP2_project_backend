@@ -1,4 +1,4 @@
-const { init } = require('./initdb')
+const { init } = require('../dbConfig/init')
 
 class Habit {
     constructor(data) {
