@@ -4,19 +4,18 @@ class Habit {
     constructor(data) {
         this.id = data.id;
         this.name = data.name;
-        this.email = data.email; //??
         this.difficulty = data.difficulty;
         this.frequency = data.frequency;
         this.number_of_rep = data.number_of_rep;
         this.completed = data.completed;
         this.last_completed = data.last_completed;
         this.streak = data.streak;
+        this.user_id = data.user_id
     }
 
     static get all () {
         return new Promise (async (res, rej) => {
             try {
-                const db = await init() // depends what taher called this function
                 const habitData = await db.query('SELECT * FROM habits;')
                 const habits = habitData.rows.map( u => new Habit(u))
                 if(!habits.length) throw new Error ('No Users to get')
@@ -30,7 +29,6 @@ class Habit {
     static getById (id) {
         return new Promise (async (res, rej) => {
             try {
-                const db = await init() // depends what taher called this function
                 const habitData = await db.query(`SELECT * FROM habits WHERE id = $1;`, [id])
                 let habit = new Habit(habitData.rows[0])
                 res(habit)
@@ -43,7 +41,6 @@ class Habit {
     static create (habitData) {
         return new Promise (async (res, rej) => {
             try {       
-                const db = await init() // depends what taher called this function
                 const {name, email, password, difficulty, frequency, number_of_rep, completed, last_completed, streak} = habitData
                 const habit = await db.query("INSERT INTO users (name, email, password, difficulty, frequency, number_of_rep, completed, last_completed, streak) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);", [name, email, password, difficulty, frequency, number_of_rep, completed, last_completed, streak])
                 res(habit)
