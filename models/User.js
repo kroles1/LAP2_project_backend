@@ -42,7 +42,7 @@ class User {
             try {       
                 const db = await init() // depends what taher called this function
                 const {username, email, password, level, exp} = userData
-                const user = await db.query("NSERT INTO users (username, email, password, level, exp) VALUES ($1, $2, $3, $4, $5);", [username, email, password, level, exp])
+                const user = await db.query("INSERT INTO users (username, email, password, level, exp) VALUES ($1, $2, $3, $4, $5);", [username, email, password, level, exp])
                 res(user)
             } catch (err) {
                 rej(err.message)

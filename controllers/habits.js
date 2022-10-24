@@ -24,7 +24,15 @@ async function create (req, res) {
     }
 }
 
-async function edit (req, res) {
+async function update (req, res) { // interacting with + button
+    try {
+
+    } catch (err) {
+        
+    }
+}
+
+async function edit (req, res) { // editing the habit
     try {
 
     } catch (err) {
@@ -40,4 +48,4 @@ async function destroy (req, res) {
     }
 }
 
-module.exports = {index, create, getById, edit, destroy}
+module.exports = {index, create, getById,update, edit, destroy}
