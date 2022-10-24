@@ -1,4 +1,4 @@
-const db = require('../dbConfig/init.js')
+const db = require("../dbConfig/init.js");
 
 class Habit {
   constructor(data) {
@@ -33,7 +33,7 @@ class Habit {
           `SELECT * FROM habits WHERE id = $1;`,
           [id]
         );
-        if(!habitData.rows[0]) throw Error('Habit not found')
+        if (!habitData.rows[0]) throw Error("Habit not found");
         let habit = new Habit(habitData.rows[0]);
         res(habit);
       } catch (err) {
@@ -50,7 +50,8 @@ class Habit {
           habitData;
         const habit = await db.query(
           `INSERT INTO habits (name, difficulty, frequency, number_of_rep, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
-          [name, difficulty, frequency, number_of_rep, user_id]);
+          [name, difficulty, frequency, number_of_rep, user_id]
+        );
         res(new Habit(habit.rows[0]));
       } catch (err) {
         console.log(err);
@@ -62,19 +63,15 @@ class Habit {
   edit(data) {
     return new Promise(async (resolve, reject) => {
       try {
+        const { name, difficulty, frequency, number_of_rep } = data;
         let updatedHabitData = await db.query(
-          `UPDATE users SET name = $1, difficulty = $2, frequency = $3, number_of_rep = $4 WHERE id = $5  RETURNING *;`,
-          [
-            data.name,
-            data.difficulty,
-            data.frequency,
-            data.number_of_rep,
-            this.id,
-          ]
+          `UPDATE habits SET name = $1, difficulty = $2, frequency = $3, number_of_rep = $4 WHERE id = $5  RETURNING *;`,
+          [name, difficulty, frequency, number_of_rep, this.id]
         );
         let updatedHabit = new Habit(updatedHabitData.rows[0]);
         resolve(updatedHabit);
       } catch (err) {
+        console.log(err);
         reject("Error editing habit");
       }
     });
@@ -111,4 +108,4 @@ class Habit {
   }
 }
 
-module.exports = Habit
+module.exports = Habit;

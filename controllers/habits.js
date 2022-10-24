@@ -1,7 +1,7 @@
 const Habit = require('../Models/Habit')
 
 
-async function index (req, res) { // this will need to change as we want all habits with the user_id now just all habits
+async function index (req, res) {
     try {
         const habits = await Habit.all
         res.status(200).json(habits)
@@ -42,9 +42,20 @@ async function update (req, res) { // interacting with + button
 
 async function edit (req, res) { // editing the habit
     try {
-
+        console.log('hitting update habit route');
+        const newHabitData = req.body
+        console.log(newHabitData);
+        // get the id for habit
+        const habitId = +req.params.id;
+        console.log(habitId);
+        // find the habit
+        const habitToBeUpdated = await Habit.getById(habitId);
+        console.log(`Object to be updated:\n`);
+        console.log(habitToBeUpdated);
+        const updatedHabit = await habitToBeUpdated.edit(newHabitData)
+        res.status(200).json(updatedHabit)
     } catch (err) {
-        
+        console.log(err);
     }
 }
 
