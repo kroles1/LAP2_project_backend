@@ -13,7 +13,6 @@ class User {
     static get all () {
         return new Promise (async (res, rej) => {
             try {
-                // const db = await init() // depends what taher called this function
                 const userData = await db.query('SELECT * FROM users;')
                 const users = userData.rows.map( u => new User(u))
                 if(!users.length) throw new Error ('No Users to get')
@@ -27,7 +26,6 @@ class User {
     static getById (id) {
         return new Promise (async (res, rej) => {
             try {
-                // const db = await init() // depends what taher called this function
                 const userData = await db.query(`SELECT * FROM users WHERE id = $1;`, [id])
                 let user = new User(userData.rows[0])
                 res(user)
@@ -40,7 +38,6 @@ class User {
     static create (userData) {
         return new Promise (async (res, rej) => {
             try {       
-                // const db = await init() // depends what taher called this function
                 // to register we need username, password, email and the rest of data will be setup as default values
                 const {username, email, password} = userData
                 const user = await db.query("INSERT INTO users (user_name, email, user_password) VALUES ($1, $2, $3);", [username, email, password])
