@@ -62,7 +62,7 @@ DROP TABLE IF EXISTS public.habits;
 CREATE TABLE habits (
     id serial PRIMARY KEY,
     name varchar(100) NOT NULL,
-    difficulty varchar DEFAULT 'esay',
+    difficulty varchar,
     frequency varchar DEFAULT 'd',
     number_of_rep INT DEFAULT 1,
     completed BOOLEAN DEFAULT FALSE,

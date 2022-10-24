@@ -16,13 +16,12 @@ class Habit {
   static get all() {
     return new Promise(async (res, rej) => {
       try {
-        console.log("get all function");
         const habitData = await db.query("SELECT * FROM habits;");
         const habits = habitData.rows.map((u) => new Habit(u));
         if (!habits.length) throw new Error("No Habits to get");
         res(habits);
       } catch (err) {
-        rej(`Error retrieving habits: ${err.message}`);
+        rej(`${err.message}`);
       }
     });
   }
@@ -34,10 +33,12 @@ class Habit {
           `SELECT * FROM habits WHERE id = $1;`,
           [id]
         );
+        if(!habitData.rows[0]) throw Error('Habit not found')
         let habit = new Habit(habitData.rows[0]);
         res(habit);
       } catch (err) {
-        rej(`Error retrieving user: ${err.message}`);
+        console.log(err);
+        rej(`Error retrieving habit: ${err.message}`);
       }
     });
   }
@@ -45,19 +46,14 @@ class Habit {
   static create(habitData) {
     return new Promise(async (res, rej) => {
       try {
-        console.log("Habit modle: Create fun");
-        console.log(habitData);
         const { name, difficulty, frequency, number_of_rep, user_id } =
           habitData;
         const habit = await db.query(
-          "INSERT INTO habits (name, difficulty, frequency, number_of_rep, user_id) VALUES ($1, $2, $3, $4, $5);",
-          [name, difficulty, frequency, number_of_rep, user_id]
-        );
-        console.log('craeted new item:');
-        console.log(habit);
-        console.log(habit.rows);
-        res(habit.rows);
+          `INSERT INTO habits (name, difficulty, frequency, number_of_rep, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
+          [name, difficulty, frequency, number_of_rep, user_id]);
+        res(new Habit(habit.rows[0]));
       } catch (err) {
+        console.log(err);
         rej(err.message);
       }
     });
@@ -103,12 +99,13 @@ class Habit {
     return new Promise(async (res, rej) => {
       try {
         const result = await db.query(
-          "DELETE FROM books WHERE id = $1 RETURNING user_id",
+          "DELETE FROM habits WHERE id = $1 RETURNING user_id;",
           [this.id]
         );
-        res("Book was deleted");
+        res("habit was deleted");
       } catch (err) {
-        rej("Book could not be deleted");
+        console.log(err);
+        rej("Habbit could not be deleted");
       }
     });
   }
