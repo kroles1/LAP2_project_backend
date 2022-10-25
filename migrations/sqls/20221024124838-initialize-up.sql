@@ -68,6 +68,8 @@ CREATE TABLE habits (
     completed BOOLEAN DEFAULT FALSE,
     last_completed DATE DEFAULT NULL ,
     streak INT DEFAULT 0,
+    current_rep INT DEFAULT 0,
+    task_start_day DATE DEFAULT CURRENT_DATE,
     user_id INT NOT NULL
 );
 

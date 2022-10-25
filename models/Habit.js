@@ -10,6 +10,8 @@ class Habit {
     this.completed = data.completed;
     this.last_completed = data.last_completed;
     this.streak = data.streak;
+    this.current_rep = data.current_rep;
+    this.task_start_day = data.task_start_day
     this.user_id = data.user_id;
   }
 
@@ -87,6 +89,7 @@ class Habit {
         );
         // check date for last completed
         // if freq daily and last checked yesterday then increse streak and update last-completed by today
+        // updating current_rep as well
         // if weekly ???
         // if monthly ????
         let updatedHabit = new Habit(updatedHabitData.rows[0]);
