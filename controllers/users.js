@@ -39,6 +39,15 @@ async function edit (req, res) {
         // if (User.exp +  increase)  > exp required for next level    ->   increase =  remaining exp after leveling , level + 1
         // User.edit(increase, levelup (bool))
 
+async function updateUserXp(userId, xp) {
+    try {
+        const user = await User.getById(userId)
+        const upatedXp = await user.upateXp(exp)
+    } catch (err) {
+        res.status(400).json(err)
+    }
+}
+
 
 
 module.exports = {index, getById, edit}

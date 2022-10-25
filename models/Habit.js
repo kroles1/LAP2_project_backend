@@ -83,17 +83,88 @@ class Habit {
     return new Promise(async (resolve, reject) => {
       try {
         // user checked completed statment
-        let updatedHabitData = await db.query(
-          `UPDATE habits SET completed = TRUE, streak = streak + 1,last_completed = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
-          [this.id]
-        );
-        // check date for last completed
-        // if freq daily and last checked yesterday then increse streak and update last-completed by today
-        // updating current_rep as well
-        // if weekly ???
-        // if monthly ????
-        let updatedHabit = new Habit(updatedHabitData.rows[0]);
-        resolve(updatedHabit);
+        const freq = this.frequency
+        const currentDate = new Date().toLocaleDateString()
+        let last_completed = this.last_completed
+        let updatedHabitData
+        // create fun to use 
+        async function updateStatus(habitId, userId) {
+          const habitToBeUpdated = Habit.getById(habitId)
+          await db.query(
+            `UPDATE habits SET current_rep = current_rep + 1  WHERE id = $1  RETURNING *;`,
+            [habitId]
+          );
+          if(habitToBeUpdated.current_rep === habitToBeUpdated.number_of_rep) {
+            await db.query(
+              `UPDATE habits SET current_rep = 0, streak = streak + 1, completed = TRUE, last_completed = CURRENT_DATE, task_start_day = CURRENT_DATE + 1  WHERE id = $1  RETURNING *;`,
+              [habitId]
+            );
+          }
+        }
+        switch(freq) {
+          case 'd': {
+            if(!last_completed) {
+              updateStatus(this.id, this.user_id)
+            } else {
+              const today = currentDate.split('/')[0]
+              let lastDay = last_completed.toLocaleDateString().split('/')[0]
+              if(today == 1 && (lastDay == 30 || lastDay == 28 || lastDay == 31 || lastDay == 29))
+                lastDay = 0
+              if(today - lastDay == 1) 
+                updateStatus(this.id, this.user_id) 
+              else {
+                await db.query(
+                  `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
+                  [this.id]
+                )
+              }
+            }
+            break;
+          }
+          case 'w' : {
+            if(!last_completed) {
+              updateStatus(this.id, this.user_id)
+            } else {
+              const today = currentDate.split('/')[0]
+              let taskStartDay = this.task_start_day.toLocaleDateString().split('/')[0]
+              if(today - taskStartDay <= 7) 
+                updateStatus(this.id, this.user_id) 
+              else {
+                await db.query(
+                  `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
+                  [this.id]
+                )
+              }
+            }
+            break;
+          }
+          case 'm': {
+            if(!last_completed) {
+              updateStatus(this.id, this.user_id)
+            } else {
+              const today = currentDate.split('/')[1]
+              let lastDay = last_completed.toLocaleDateString().split('/')[1]
+              if(today == 1 && lastDay == 12)
+                lastDay = 0
+              if(today - lastDay == 1) 
+                updateStatus(this.id, this.user_id) 
+              else {
+                await db.query(
+                  `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
+                  [this.id]
+                )
+              }
+            }
+            break;
+          }
+          default : {
+            break;
+          }
+        }
+        
+        updatedHabitData = await Habit.getById(this.id)
+        console.log(updatedHabitData);
+        resolve(new Habit(updatedHabitData));
       } catch (err) {
         console.log(err);
         reject(`Error updating completed-status for a habit habit: ${err}`);
