@@ -1,4 +1,5 @@
 const db = require("../dbConfig/init.js");
+const User = require("./User.js");
 
 class Habit {
   constructor(data) {
@@ -82,36 +83,47 @@ class Habit {
   update() {
     return new Promise(async (resolve, reject) => {
       try {
-        // user checked completed statment
         const freq = this.frequency
         const currentDate = new Date().toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
-        // create fun to use 
+        let difficulty = this.difficulty
+        let xp 
         async function updateStatus(habitId, userId) {
-          const habitToBeUpdated = Habit.getById(habitId)
+          let habitToBeUpdated = await  Habit.getById(habitId)
           await db.query(
             `UPDATE habits SET current_rep = current_rep + 1  WHERE id = $1  RETURNING *;`,
             [habitId]
           );
+          habitToBeUpdated = await  Habit.getById(habitId)
           if(habitToBeUpdated.current_rep === habitToBeUpdated.number_of_rep) {
             await db.query(
               `UPDATE habits SET current_rep = 0, streak = streak + 1, completed = TRUE, last_completed = CURRENT_DATE, task_start_day = CURRENT_DATE + 1  WHERE id = $1  RETURNING *;`,
               [habitId]
             );
+            const userToUpdateData = await User.getById(userId)
+            // let userToUpdate = new User(userToUpdateData.rows[0])
+            if(difficulty == 'easy')
+              xp = 10;
+              if(difficulty == 'medium')
+              xp = 20;
+              if(difficulty == 'hard')
+              xp = 30;
+              await userToUpdateData.updateLevelExp(xp)
           }
         }
         switch(freq) {
           case 'd': {
             if(!last_completed) {
-              updateStatus(this.id, this.user_id)
+              await updateStatus(this.id, this.user_id)
             } else {
               const today = currentDate.split('/')[0]
               let lastDay = last_completed.toLocaleDateString().split('/')[0]
               if(today == 1 && (lastDay == 30 || lastDay == 28 || lastDay == 31 || lastDay == 29))
                 lastDay = 0
-              if(today - lastDay == 1) 
-                updateStatus(this.id, this.user_id) 
+              if(today - lastDay == 1) {
+                await updateStatus(this.id, this.user_id)
+              }
               else {
                 await db.query(
                   `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
@@ -123,12 +135,12 @@ class Habit {
           }
           case 'w' : {
             if(!last_completed) {
-              updateStatus(this.id, this.user_id)
+              await updateStatus(this.id, this.user_id)
             } else {
               const today = currentDate.split('/')[0]
               let taskStartDay = this.task_start_day.toLocaleDateString().split('/')[0]
               if(today - taskStartDay <= 7) 
-                updateStatus(this.id, this.user_id) 
+                await updateStatus(this.id, this.user_id) 
               else {
                 await db.query(
                   `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
@@ -140,14 +152,14 @@ class Habit {
           }
           case 'm': {
             if(!last_completed) {
-              updateStatus(this.id, this.user_id)
+              await updateStatus(this.id, this.user_id)
             } else {
               const today = currentDate.split('/')[1]
               let lastDay = last_completed.toLocaleDateString().split('/')[1]
               if(today == 1 && lastDay == 12)
                 lastDay = 0
               if(today - lastDay == 1) 
-                updateStatus(this.id, this.user_id) 
+                await updateStatus(this.id, this.user_id) 
               else {
                 await db.query(
                   `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
@@ -161,9 +173,7 @@ class Habit {
             break;
           }
         }
-        
         updatedHabitData = await Habit.getById(this.id)
-        console.log(updatedHabitData);
         resolve(new Habit(updatedHabitData));
       } catch (err) {
         console.log(err);

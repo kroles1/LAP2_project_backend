@@ -14,6 +14,7 @@ async function getById(req, res) {
     const habit = await Habit.getById(+req.params.id);
     res.status(200).json(habit);
   } catch (err) {
+    console.log("error get by id", err);
     res.status(500).send({ err });
   }
 }
@@ -27,35 +28,37 @@ async function create(req, res) {
     const habit = await Habit.create(habitData);
     res.status(201).json(habit);
   } catch (err) {
+    console.log("error create a habit", err);
     res.status(422).json({ err });
   }
 }
 
 async function updateCompletedStatus(req, res) {
-  // interacting with + button
   try {
-    const habitToMarkAsCompleted = await Habit.getById(+req.params.id)
+    const habitToMarkAsCompleted = await Habit.getById(+req.params.id);
     let habit = await habitToMarkAsCompleted.update();
-    // habit = {...habit, last_completed: habit.last_completed.toLocaleDateString()}
-    res.status(200).json(habit)
+    habit = {
+      ...habit,
+      task_start_day: habit.task_start_day.toLocaleDateString(),
+    }
+    if (habit.last_completed)
+      habit = {
+        ...habit,
+        last_completed: habit.last_completed.toLocaleDateString(),
+      };
+
+    res.status(200).json(habit);
   } catch (err) {
-    console.log("error from controllers",err);
+    console.log("error from controllers", err);
     res.status(422).json({ err });
   }
 }
 
 async function edit(req, res) {
   try {
-    console.log("hitting update habit route");
     const newHabitData = req.body;
-    console.log(newHabitData);
-    // get the id for habit
     const habitId = +req.params.id;
-    console.log(habitId);
-    // find the habit
     const habitToBeUpdated = await Habit.getById(habitId);
-    console.log(`Object to be updated:\n`);
-    console.log(habitToBeUpdated);
     const updatedHabit = await habitToBeUpdated.edit(newHabitData);
     res.status(200).json(updatedHabit);
   } catch (err) {
@@ -65,9 +68,7 @@ async function edit(req, res) {
 
 async function destroy(req, res) {
   try {
-    console.log("hitting delete habit route:");
     const habit = await Habit.getById(req.params.id);
-    console.log(habit);
     const deltedHabit = await habit.destroy();
     res.status(204).end();
   } catch (err) {
@@ -76,4 +77,11 @@ async function destroy(req, res) {
   }
 }
 
-module.exports = { index, create, getById, updateCompletedStatus, edit, destroy };
+module.exports = {
+  index,
+  create,
+  getById,
+  updateCompletedStatus,
+  edit,
+  destroy,
+};
