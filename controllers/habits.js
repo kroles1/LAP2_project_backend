@@ -36,9 +36,10 @@ async function updateCompletedStatus(req, res) {
   try {
     const habitToMarkAsCompleted = await Habit.getById(+req.params.id)
     let habit = await habitToMarkAsCompleted.update();
-    habit = {...habit, last_completed: habit.last_completed.toLocaleDateString()}
+    // habit = {...habit, last_completed: habit.last_completed.toLocaleDateString()}
     res.status(200).json(habit)
   } catch (err) {
+    console.log("error from controllers",err);
     res.status(422).json({ err });
   }
 }
