@@ -6,7 +6,7 @@ async function index (req, res) {
         res.status(200).json(users)
     } catch (err) {
         console.log(err);
-        res.status(500).json(err)
+        res.status(500).json({err})
     }
 }
 
@@ -16,7 +16,7 @@ async function getById (req, res) {
         console.log(user);
         res.status(200).json(user)
     } catch (err) {
-        console.log(err);
+        console.log("error to handle",err.message);
         res.status(404).json({err})
     }
 }

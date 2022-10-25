@@ -35,8 +35,6 @@ async function create(req, res) {
 
 async function updateCompletedStatus(req, res) {
   try {
-    console.log("hitting update on complete task contoller:");
-    console.log("-----------------------------------------");
     const habitToMarkAsCompleted = await Habit.getById(+req.params.id);
     let habit = await habitToMarkAsCompleted.update();
     habit = {

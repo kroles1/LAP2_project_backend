@@ -5,6 +5,11 @@ const User = require('../models/User');
 
 async function register (req, res) {
     try {
+        console.log("hitting users register route");
+        let existedUser = await User.findByEmail(req.body.email)
+        console.log(existedUser);
+        if(existedUser) throw new Error('email address already used')
+
         const salt = await bcrypt.genSalt();
         const hashed = await bcrypt.hash(req.body.password, salt);
         const user = await User.create({...req.body, password: hashed})
@@ -12,7 +17,7 @@ async function register (req, res) {
         res.status(201).json({msg: 'User created'})
     } catch (err) {
         console.log(err);
-        res.status(500).json({err});
+        res.status(400).json(err)
     }
 }
 

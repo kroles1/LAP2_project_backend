@@ -1,4 +1,5 @@
 const db = require("../dbConfig/init.js");
+const User = require("./User.js");
 
 class Habit {
   constructor(data) {
@@ -86,6 +87,8 @@ class Habit {
         const currentDate = new Date().toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
+        let difficulty = this.difficulty
+        let xp 
         async function updateStatus(habitId, userId) {
           let habitToBeUpdated = await  Habit.getById(habitId)
           await db.query(
@@ -98,6 +101,15 @@ class Habit {
               `UPDATE habits SET current_rep = 0, streak = streak + 1, completed = TRUE, last_completed = CURRENT_DATE, task_start_day = CURRENT_DATE + 1  WHERE id = $1  RETURNING *;`,
               [habitId]
             );
+            const userToUpdateData = await User.getById(userId)
+            // let userToUpdate = new User(userToUpdateData.rows[0])
+            if(difficulty == 'easy')
+              xp = 10;
+              if(difficulty == 'medium')
+              xp = 20;
+              if(difficulty == 'hard')
+              xp = 30;
+              await userToUpdateData.updateLevelExp(xp)
           }
         }
         switch(freq) {
