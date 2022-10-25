@@ -72,7 +72,7 @@ class Habit {
         resolve(updatedHabit);
       } catch (err) {
         console.log(err);
-        reject("Error editing habit");
+        reject(`Error editing habit: ${err}`);
       }
     });
   }
@@ -80,14 +80,20 @@ class Habit {
   update() {
     return new Promise(async (resolve, reject) => {
       try {
+        // user checked completed statment
         let updatedHabitData = await db.query(
-          `UPDATE users SET level = level + 1 WHERE id = $1  RETURNING *;`,
+          `UPDATE habits SET completed = TRUE, streak = streak + 1,last_completed = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
           [this.id]
         );
+        // check date for last completed
+        // if freq daily and last checked yesterday then increse streak and update last-completed by today
+        // if weekly ???
+        // if monthly ????
         let updatedHabit = new Habit(updatedHabitData.rows[0]);
         resolve(updatedHabit);
       } catch (err) {
-        reject("Error updating habit");
+        console.log(err);
+        reject(`Error updating completed-status for a habit habit: ${err}`);
       }
     });
   }
