@@ -2,7 +2,6 @@ const User = require('../models/User')
 
 async function index (req, res) {
     try {
-        console.log("get all users");
         const users = await User.all
         res.status(200).json(users)
     } catch (err) {
@@ -14,8 +13,10 @@ async function index (req, res) {
 async function getById (req, res) {
     try {
         const user = await User.getById(req.params.id)
+        console.log(user);
         res.status(200).json(user)
     } catch (err) {
+        console.log(err);
         res.status(404).json({err})
     }
 }
@@ -26,6 +27,7 @@ async function edit (req, res) {
         const user = await User.edit(req.body)
         res.status(201).json(user)
     } catch (err) {
+        console.log(err);
         res.status(422).json({err})
     }
 }

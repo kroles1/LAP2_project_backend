@@ -82,26 +82,18 @@ class Habit {
   update() {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log("update function:");
         const freq = this.frequency
         const currentDate = new Date().toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
-        // create fun to use 
         async function updateStatus(habitId, userId) {
           let habitToBeUpdated = await  Habit.getById(habitId)
-          console.log(habitId, userId);
-          console.log("habit to be updated: \n",habitToBeUpdated);
           await db.query(
             `UPDATE habits SET current_rep = current_rep + 1  WHERE id = $1  RETURNING *;`,
             [habitId]
           );
-          console.log("after updating");
           habitToBeUpdated = await  Habit.getById(habitId)
-          console.log(habitToBeUpdated);
-          console.log("check for completed task");
           if(habitToBeUpdated.current_rep === habitToBeUpdated.number_of_rep) {
-            console.log("task completed");
             await db.query(
               `UPDATE habits SET current_rep = 0, streak = streak + 1, completed = TRUE, last_completed = CURRENT_DATE, task_start_day = CURRENT_DATE + 1  WHERE id = $1  RETURNING *;`,
               [habitId]
@@ -111,25 +103,20 @@ class Habit {
         switch(freq) {
           case 'd': {
             if(!last_completed) {
-              console.log("Task is new, first time:");
               await updateStatus(this.id, this.user_id)
             } else {
               const today = currentDate.split('/')[0]
               let lastDay = last_completed.toLocaleDateString().split('/')[0]
-              console.log("Habit is not new and last time was completed",lastDay);
               if(today == 1 && (lastDay == 30 || lastDay == 28 || lastDay == 31 || lastDay == 29))
                 lastDay = 0
               if(today - lastDay == 1) {
-                console.log("Task not missed");
                 await updateStatus(this.id, this.user_id)
               }
               else {
-                console.log("Task is missed");
                 await db.query(
                   `UPDATE habits SET current_rep = 1, streak = 0, task_start_day = CURRENT_DATE  WHERE id = $1  RETURNING *;`,
                   [this.id]
                 )
-                console.log(await Habit.getById(this.id));
               }
             }
             break;
@@ -174,9 +161,7 @@ class Habit {
             break;
           }
         }
-        
         updatedHabitData = await Habit.getById(this.id)
-        console.log(updatedHabitData);
         resolve(new Habit(updatedHabitData));
       } catch (err) {
         console.log(err);

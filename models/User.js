@@ -15,10 +15,10 @@ class User {
             try {
                 const userData = await db.query('SELECT * FROM users;')
                 const users = userData.rows.map( u => new User(u))
-                if(!users.length) throw new Error ('No Users to get')
+                if(!users.length) throw new Error ('No users registerd to get')
                 res(users)
             } catch (err) {
-                rej(`Error retrieving users: ${err.message}`)
+                rej(err)
             }
         })
     }
@@ -27,26 +27,15 @@ class User {
         return new Promise (async (res, rej) => {
             try {
                 const userData = await db.query(`SELECT * FROM users WHERE id = $1;`, [id])
+                if(!userData.rows.length) throw new Error('No user at this entry')
                 let user = new User(userData.rows[0])
-                res(user)
-            } catch (err) {
-                rej(`Error retrieving user: ${err.message}`)
-            }
-        })
-    }
-
-    static create (userData) {
-        return new Promise (async (res, rej) => {
-            try {       
-                // to register we need username, password, email and the rest of data will be setup as default values
-                const {username, email, password} = userData
-                const user = await db.query("INSERT INTO users (user_name, email, user_password) VALUES ($1, $2, $3);", [username, email, password])
                 res(user)
             } catch (err) {
                 rej(err.message)
             }
         })
     }
+
 
     // edit (increase, levelUp) {
     //     return new Promise (async (resolve, reject) => {
@@ -74,6 +63,28 @@ class User {
         })
     }
 
+
+    static create (userData) {
+        return new Promise (async (res, rej) => {
+            try {       
+                // to register we need username, password, email and the rest of data will be setup as default values
+                const {username, email, password} = userData
+                let existedUser = await User.findByEmail(email)
+                console.log(existedUser);
+                if(existedUser) throw new Error('email address already used')
+                // there is a bug, the next query not working
+                existedUser = await db.query(`SELECT * FROM users WHERE user_name = $1;`, [username])
+                console.log(existedUser.rows[0]);
+                if(existedUser.rows.length) throw new Error('User name already in use')
+                const user = await db.query("INSERT INTO users (user_name, email, user_password) VALUES ($1, $2, $3);", [username, email, password])
+                console.log(user.rows[0]);
+                res(user)
+            } catch (err) {
+                console.log(err);
+                rej(err.message)
+            }
+        })
+    }
 }
 
 module.exports = User
