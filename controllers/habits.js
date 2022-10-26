@@ -2,6 +2,8 @@ const Habit = require("../models/Habit");
 
 async function index(req, res) {
   try {
+    const payload = req.headers
+    console.log(payload)
     const habits = await Habit.all;
     res.status(200).json(habits);
   } catch (err) {
