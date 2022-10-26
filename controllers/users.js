@@ -2,6 +2,7 @@ const User = require('../models/User')
 
 async function index (req, res) {
     try {
+        console.log('getting all users')
         const users = await User.all
         res.status(200).json(users)
     } catch (err) {

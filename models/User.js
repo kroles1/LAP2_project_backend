@@ -13,6 +13,8 @@ class User {
     static get all () {
         return new Promise (async (res, rej) => {
             try {
+                console.log('getting data from database')
+                // console.log(await db.query('SELECT * FROM users;'))
                 const userData = await db.query('SELECT * FROM users;')
                 const users = userData.rows.map( u => new User(u))
                 if(!users.length) throw new Error ('No users registerd to get')
