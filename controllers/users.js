@@ -22,17 +22,6 @@ async function getById (req, res) {
     }
 }
 
-
-async function edit (req, res) {
-    try {
-        const user = await User.edit(req.body)
-        res.status(201).json(user)
-    } catch (err) {
-        console.log(err);
-        res.status(422).json({err})
-    }
-}
-
 async function updateUserXp(userId, xp) {
     try {
         const user = await User.getById(userId)
