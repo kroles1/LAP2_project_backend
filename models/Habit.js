@@ -102,7 +102,6 @@ class Habit {
               [habitId]
             );
             const userToUpdateData = await User.getById(userId)
-            // let userToUpdate = new User(userToUpdateData.rows[0])
             if(difficulty == 'easy')
               xp = 10;
               if(difficulty == 'medium')
