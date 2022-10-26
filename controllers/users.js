@@ -22,15 +22,7 @@ async function getById (req, res) {
     }
 }
 
-async function updateUserXp(userId, xp) {
-    try {
-        const user = await User.getById(userId)
-        const upatedXp = await user.upateXp(exp)
-    } catch (err) {
-        res.status(400).json(err)
-    }
-}
 
 
 
-module.exports = {index, getById, edit}
+module.exports = {index, getById}
