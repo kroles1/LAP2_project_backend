@@ -16,10 +16,10 @@ class Habit {
     this.user_id = data.user_id;
   }
 
-  static get all() {
+  static all(user_id) {
     return new Promise(async (res, rej) => {
       try {
-        const habitData = await db.query("SELECT * FROM habits;");
+        const habitData = await db.query("SELECT * FROM habits WHERE user_id = $1;", [user_id]);
         const habits = habitData.rows.map((u) => new Habit(u));
         if (!habits.length) throw new Error("No Habits to get");
         res(habits);
