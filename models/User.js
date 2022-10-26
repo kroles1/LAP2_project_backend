@@ -46,8 +46,7 @@ class User {
         console.log("calling find by email function");
         console.log(email, typeof email);
       try {
-        // let result = await db.query(`SELECT * FROM users WHERE email = $1;`,[email])
-        let result = await db.query(`SELECT * FROM users WHERE email = ${email};`)
+        let result = await db.query(`SELECT * FROM users WHERE email = $1;`,[email])
         console.log(result.rows[0]);
         let user = new User(result.rows[0]);
         res(user);

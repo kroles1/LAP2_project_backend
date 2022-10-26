@@ -33,15 +33,6 @@ async function edit (req, res) {
     }
 }
 
-// this might need to go in the font end
-        // check habit difficulty
-        // if diff = easy, exp = 10 // medium, exp = 20
-        // set variable "increase" to 10/20/..
-        // check how close to next level
-        // calculate difference to next level
-        // if (User.exp +  increase)  > exp required for next level    ->   increase =  remaining exp after leveling , level + 1
-        // User.edit(increase, levelup (bool))
-
 async function updateUserXp(userId, xp) {
     try {
         const user = await User.getById(userId)
