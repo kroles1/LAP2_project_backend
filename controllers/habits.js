@@ -3,10 +3,10 @@ const Habit = require("../models/Habit");
 async function index(req, res) {
   try {
     const payload = req.currentUser
-    console.log(payload)
     const habits = await Habit.all(payload.id);
     res.status(200).json(habits);
   } catch (err) {
+    console.log(err);
     res.status(500).send({ err });
   }
 }
@@ -16,7 +16,7 @@ async function getById(req, res) {
     const habit = await Habit.getById(+req.params.id);
     res.status(200).json(habit);
   } catch (err) {
-    console.log("error get by id", err);
+    console.log("error get habit by id", err);
     res.status(500).send({ err });
   }
 }
@@ -65,6 +65,7 @@ async function edit(req, res) {
     res.status(200).json(updatedHabit);
   } catch (err) {
     console.log(err);
+    res.status(400).json(err.message)
   }
 }
 
