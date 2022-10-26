@@ -1,6 +1,7 @@
 node_modules
 .env
 database.json
+
 tests
 migrations
 .DS_Store
@@ -31,3 +32,8 @@ migrations
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+_scripts
+migrations
+tests
+
