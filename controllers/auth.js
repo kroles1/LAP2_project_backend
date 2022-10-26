@@ -24,7 +24,6 @@ async function login (req, res) {
         const user = await User.findByEmail(req.body.email)
         if(!user){ throw new Error('No user with this email') }
         const authed = await bcrypt.compare(req.body.password, user.password)
-        console.log(authed);
         if (!!authed){
             const payload = {id: user.id, username: user.username, email: user.email}
             const sendToken = ( err, token ) => {
