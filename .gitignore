@@ -1,11 +1,8 @@
 node_modules
 .env
-
 database.json
 _scripts
 migrations
-
 tests
-
 
 
