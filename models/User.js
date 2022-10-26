@@ -38,20 +38,6 @@ class User {
         })
     }
 
-
-    // edit (increase, levelUp) {
-    //     return new Promise (async (resolve, reject) => {
-    //         try {
-    //             let updatedUserData = await db.query(`UPDATE users SET exp = exp + $1 CASE WHEN $2 THEN level = level + 1 WHERE id = $3  RETURNING *;`, [ increase, levelUp, this.id ]);
-                
-    //             let updatedUser = new User(updatedUserData.rows[0]);
-    //             resolve (updatedUser);
-    //         } catch (err) {
-    //             reject('Error updating user');
-    //         }
-    //     });
-    // }
-
     static findByEmail(email){
         return new Promise(async (res, rej) => {
             try {
@@ -99,8 +85,12 @@ class User {
                 const userXp = await db.query(`SELECT exp FROM users WhERE id = $1;`, [this.id])
                 console.log("userXp = ",userXp.rows[0].exp);
                 // needs to write a condition to upgrade level every time gain 100exp
-                if(userXp.rows[0].exp%100 === 0) {
-                    await db.query(`UPDATE users SET level = level + 1 WHERE id = $1;`, [this.id])
+                // if user reached 100 level up
+                // if exp >= 100 then move to level 2
+                // total-exp = (level -1) * 100 + gained exp from a habit
+                // if(userXp.rows[0].exp - (level -1)*100) >= 100
+                if(userXp.rows[0].exp > 100) {
+                    await db.query(`UPDATE users SET level = level + 1, exp = exp - 100 WHERE id = $1;`, [this.id])
                 }
                 resolve('user xp updated')
             }catch(err){
