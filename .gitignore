@@ -1,1 +1,8 @@
 node_modules
+.env
+database.json
+tests
+migrations
+.DS_Store
+*.log
+.vscode
