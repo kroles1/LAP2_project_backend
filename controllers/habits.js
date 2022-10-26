@@ -4,7 +4,7 @@ async function index(req, res) {
   try {
     const payload = req.currentUser
     console.log(payload)
-    const habits = await Habit.all;
+    const habits = await Habit.all(payload.id);
     res.status(200).json(habits);
   } catch (err) {
     res.status(500).send({ err });
