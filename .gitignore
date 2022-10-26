@@ -1,6 +1,11 @@
 node_modules
 .env
-tests
-migrations
+
 database.json
-package-lock.json
+_scripts
+migrations
+
+tests
+
+
+
