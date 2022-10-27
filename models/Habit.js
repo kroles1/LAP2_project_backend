@@ -85,7 +85,6 @@ class Habit {
       try {
         const freq = this.frequency
         let currentDate = new Date().toLocaleDateString()
-        let task_start_day = this.task_start_day.toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
         let difficulty = this.difficulty
@@ -98,10 +97,7 @@ class Habit {
         }
         async function updateStatus(habitId, userId) {
           let habitToBeUpdated = await  Habit.getById(habitId)
-          await db.query(
-            `UPDATE habits SET current_rep = current_rep + 1  WHERE id = $1  RETURNING *;`,
-            [habitId]
-          );
+          
           habitToBeUpdated = await  Habit.getById(habitId)
           if(habitToBeUpdated.current_rep === habitToBeUpdated.number_of_rep) {
             await db.query(
