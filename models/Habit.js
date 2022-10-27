@@ -85,6 +85,7 @@ class Habit {
       try {
         const freq = this.frequency
         const currentDate = new Date().toLocaleDateString()
+        let task_start_day = this.task_start_day.toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
         let difficulty = this.difficulty

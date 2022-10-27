@@ -38,3 +38,4 @@ migrations
 tests
 
 docker-compose.test.yaml
+docker-compose.yaml
