@@ -90,7 +90,7 @@ class Habit {
         let updatedHabitData
         let difficulty = this.difficulty
         let xp 
-        if(currentDate > task_start_day) {
+        if(currentDate >= task_start_day) {
           await db.query(
             `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
             [this.id]
