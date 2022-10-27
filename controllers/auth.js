@@ -6,9 +6,9 @@ const User = require('../models/User');
 async function register (req, res) {
     try {
         let existedUser = await db.query(`SELECT * FROM users WHERE email = $1;`,[req.body.email])
-        if(existedUser.rows[0]) throw new Error('email address already used')
-        existedUser = await User.findByUserName(req.body.username)
-        if(existedUser) throw new Error('User name already used')
+        if(existedUser.rows.length) throw new Error('email address already used')
+        existedUser = await db.query(`SELECT * FROM users WHERE user_name = $1;`,[req.body.username])
+        if(existedUser.rows.length) throw new Error('username already used')
         const salt = await bcrypt.genSalt();
         const hashed = await bcrypt.hash(req.body.password, salt);
         const user = await User.create({...req.body, password: hashed})

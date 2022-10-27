@@ -37,3 +37,4 @@ _scripts
 migrations
 tests
 
+docker-compose.test.yaml
