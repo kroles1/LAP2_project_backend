@@ -75,7 +75,6 @@ class User {
           "INSERT INTO users (user_name, email, user_password) VALUES ($1, $2, $3) RETURNING *;",
           [username, email, password]
         );
-        console.log(user.rows[0]);
         if(!user.rows.length) throw new Error("error creating user")
         res(user);
       } catch (err) {
