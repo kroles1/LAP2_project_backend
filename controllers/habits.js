@@ -7,7 +7,7 @@ async function index(req, res) {
     res.status(200).json(habits);
   } catch (err) {
     console.log(err);
-    res.status(500).send({ err });
+    res.status(400).send({ err });
   }
 }
 
@@ -17,7 +17,7 @@ async function getById(req, res) {
     res.status(200).json(habit);
   } catch (err) {
     console.log("error get habit by id", err);
-    res.status(500).send({ err });
+    res.status(400).send({ err });
   }
 }
 
