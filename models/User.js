@@ -42,7 +42,7 @@ class User {
     return new Promise(async (res, rej) => {
       try {
         let result = await db.query(`SELECT * FROM users WHERE email = $1;`,[email])
-        if (!userData.rows.length) throw new Error("No user registered with this email address");
+        if (!result.rows.length) throw new Error("No user registered with this email address");
         let user = new User(result.rows[0]);
         res(user);
       } catch (err) {
