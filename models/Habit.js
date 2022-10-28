@@ -38,10 +38,12 @@ class Habit {
         if (!habits.length) throw new Error("No Habits to get");
         habits.map(async habit => {
           let task_start_day = habit.task_start_day.toLocaleDateString()
+          console.log('*****************');
+          console.log(currentDate > task_start_day && habit.completed)
           if(currentDate > task_start_day && habit.completed) {
             await db.query(
               `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
-              [this.id]
+              [habit.id]
             )
           }
         })
