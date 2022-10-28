@@ -91,7 +91,11 @@ class Habit {
   edit(data) {
     return new Promise(async (resolve, reject) => {
       try {
-        const { name, difficulty, frequency, number_of_rep } = data;
+        // const { name, difficulty, frequency, number_of_rep } = data;
+        const name = data.name || this.name
+        const difficulty = data.difficulty || this.difficulty
+        const frequency = data.frequency || this.frequency
+        const number_of_rep = data.number_of_rep || this.number_of_rep
         let updatedHabitData = await db.query(
           `UPDATE habits SET name = $1, difficulty = $2, frequency = $3, number_of_rep = $4 WHERE id = $5  RETURNING *;`,
           [name, difficulty, frequency, number_of_rep, this.id]
