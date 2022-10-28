@@ -84,11 +84,18 @@ class Habit {
     return new Promise(async (resolve, reject) => {
       try {
         const freq = this.frequency
-        const currentDate = new Date().toLocaleDateString()
+        let currentDate = new Date().toLocaleDateString()
+        let task_start_day = this.task_start_day.toLocaleDateString()
         let last_completed = this.last_completed
         let updatedHabitData
         let difficulty = this.difficulty
         let xp 
+        if(currentDate > task_start_day) {
+          await db.query(
+            `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
+            [this.id]
+          )
+        }
         async function updateStatus(habitId, userId) {
           let habitToBeUpdated = await  Habit.getById(habitId)
           await db.query(

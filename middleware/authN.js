@@ -7,6 +7,7 @@ dotenv.config();
 // verify token function
 async function auth(req, res, next) {
   const rawToken = req.headers.authorization;
+  console.log(rawToken);
   try {
     if (
       rawToken === "Bearer" ||
