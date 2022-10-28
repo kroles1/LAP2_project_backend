@@ -16,12 +16,35 @@ class Habit {
     this.user_id = data.user_id;
   }
 
+  // static all(user_id) {
+  //   return new Promise(async (res, rej) => {
+  //     try {
+  //       const habitData = await db.query(“SELECT * FROM habits WHERE user_id = $1;“, [user_id]);
+  //       const habits = habitData.rows.map((u) => new Habit(u));
+  //       if (!habits.length) throw new Error(“No Habits to get”);
+  //       res(habits);
+  //     } catch (err) {
+  //       rej(`${err.message}`);
+  //     }
+  //   });
+  // }
+
   static all(user_id) {
     return new Promise(async (res, rej) => {
       try {
+        let currentDate = new Date().toLocaleDateString()
         const habitData = await db.query("SELECT * FROM habits WHERE user_id = $1;", [user_id]);
-        const habits = habitData.rows.map((u) => new Habit(u));
+        let habits = habitData.rows.map((u) => new Habit(u));
         if (!habits.length) throw new Error("No Habits to get");
+        habits.map(async habit => {
+          let task_start_day = habit.task_start_day.toLocaleDateString()
+          if(currentDate > task_start_day && habit.completed) {
+            await db.query(
+              `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
+              [this.id]
+            )
+          }
+        })
         res(habits);
       } catch (err) {
         rej(`${err.message}`);
