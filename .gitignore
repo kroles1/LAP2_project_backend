@@ -2,8 +2,7 @@ node_modules
 .env
 database.json
 
-tests
-migrations
+
 .DS_Store
 *.log
 .vscode
@@ -34,8 +33,7 @@ yarn-debug.log*
 yarn-error.log*
 
 _scripts
-migrations
-tests
+
 
 docker-compose.test.yaml
 docker-compose.yaml
