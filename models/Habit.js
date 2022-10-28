@@ -91,7 +91,6 @@ class Habit {
   edit(data) {
     return new Promise(async (resolve, reject) => {
       try {
-        // const { name, difficulty, frequency, number_of_rep } = data;
         const name = data.name || this.name
         const difficulty = data.difficulty || this.difficulty
         const frequency = data.frequency || this.frequency
@@ -119,12 +118,12 @@ class Habit {
         let updatedHabitData
         let difficulty = this.difficulty
         let xp 
-        if(currentDate >= task_start_day) {
-          await db.query(
-            `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
-            [this.id]
-          )
-        }
+        // if(currentDate >= task_start_day) {
+        //   await db.query(
+        //     `UPDATE habits SET completed = FALSE WHERE id = $1  RETURNING *;`,
+        //     [this.id]
+        //   )
+        // }
         async function updateStatus(habitId, userId) {
           let habitToBeUpdated = await  Habit.getById(habitId)
           await db.query(
