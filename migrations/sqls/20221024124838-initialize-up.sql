@@ -48,7 +48,7 @@
 
 
 DROP TABLE IF EXISTS public.users;
-CREATE TABLE users (
+CREATE TABLE public.users (
     id serial PRIMARY KEY,
     user_name varchar(100) NOT NULL UNIQUE,
     email varchar(100) NOT NULL UNIQUE,
@@ -59,7 +59,7 @@ CREATE TABLE users (
 
 
 DROP TABLE IF EXISTS public.habits;
-CREATE TABLE habits (
+CREATE TABLE public.habits (
     id serial PRIMARY KEY,
     name varchar(100) NOT NULL,
     difficulty varchar,

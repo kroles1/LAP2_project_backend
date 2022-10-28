@@ -7,7 +7,7 @@
     "start": "node -L index.js",
     "test": "jest --setupFiles ./tests/integration/config.js --watchAll --detectOpenHandles --runInBand --verbose",
     "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
-    "coverage": "jest --testPathPattern=/unit/ --coverage",
+    "coverage": "jest  --testPathPattern=/unit/ --coverage",
     "dev": "nodemon index.js"
   },
   "repository": {
