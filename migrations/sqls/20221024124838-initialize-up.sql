@@ -55,7 +55,7 @@ CREATE TABLE users (
     user_password varchar(100) NOT NULL,
     level INT DEFAULT 1,
     exp INT DEFAULT 0
-	);
+);
 
 
 DROP TABLE IF EXISTS public.habits;
